@@ -4,8 +4,10 @@ import { AddNewTask } from "../types.js";
 import { deleteConvertsJob } from "./cron-jobs/deletePlaylists.js";
 import { resetConvertsJob } from "./cron-jobs/resetConverts.js";
 import { performTask } from "./performTask.js";
+import dotenv from "dotenv";
 const app = express();
 const port = 5000;
+dotenv.config();
 
 app.use(express.json());
 
@@ -46,6 +48,8 @@ app.post("/addTask", (req: any, res: any) => {
 
 app.listen(port, async () => {
   console.log(`Express app listening at http://localhost:${port}`);
+  if (!process.env.ADMIN_PASSWORD) throw new Error("ENV FILE NOT FOUND");
+  console.log("Found env file, starting cron jobs...");
   resetConvertsJob.start();
   deleteConvertsJob.start();
 });
