@@ -1,13 +1,13 @@
-import { AddNewTask } from "../types";
-import { SendAddedToQueueEmail } from "./emails/addedEmail";
-import { SendQueueErrorEmail } from "./emails/errorEmail";
-import { SendTaskFinishEmail } from "./emails/finishedEmail";
-import { getSpotifyPlaylist } from "./getSpotify";
-import { CreatePlaylists } from "./tasks/createPlaylist";
-import { FinishTask } from "./tasks/finishTask";
-import GetGenre from "./tasks/getGenre";
+import { AddNewTask } from "../types.js";
+import { SendAddedToQueueEmail } from "./emails/addedEmail.js";
+import { SendQueueErrorEmail } from "./emails/errorEmail.js";
+import { SendTaskFinishEmail } from "./emails/finishedEmail.js";
+import { getSpotifyPlaylist } from "./getSpotify.js";
+import { CreatePlaylists } from "./tasks/createPlaylist.js";
+import { FinishTask } from "./tasks/finishTask.js";
+import GetGenre from "./tasks/getGenre.js";
 
-import ValidateUser, { CheckForLimit } from "./tasks/validateUser";
+import ValidateUser, { CheckForLimit } from "./tasks/validateUser.js";
 
 export async function performTask(taskInProgress: boolean, task: AddNewTask) {
   const { user, pb } = await ValidateUser(task.userToken);

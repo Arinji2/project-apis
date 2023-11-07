@@ -1,6 +1,6 @@
 import { render } from "@react-email/render";
 import nodemailer from "nodemailer";
-import { FinishedFromQueue } from "./templates/finished-from-queue";
+import { FinishedFromQueue } from "./templates/finished-from-queue.js";
 import * as React from "react";
 import dotenv from "dotenv";
 

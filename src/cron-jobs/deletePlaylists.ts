@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import Pocketbase from "pocketbase";
 import dotenv from "dotenv";
-import { getSpotify } from "../getSpotify";
+import { getSpotify } from "../getSpotify.js";
 import { AccessToken } from "@spotify/web-api-ts-sdk";
 dotenv.config();
 export const deleteConvertsJob = cron.schedule("0 */2 * * *", async () => {

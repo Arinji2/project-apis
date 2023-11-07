@@ -1,9 +1,9 @@
 import express from "express";
-import { AddNewTaskSchema } from "../schema";
-import { AddNewTask } from "../types";
-import { deleteConvertsJob } from "./cron-jobs/deletePlaylists";
-import { resetConvertsJob } from "./cron-jobs/resetConverts";
-import { performTask } from "./performTask";
+import { AddNewTaskSchema } from "../schema.js";
+import { AddNewTask } from "../types.js";
+import { deleteConvertsJob } from "./cron-jobs/deletePlaylists.js";
+import { resetConvertsJob } from "./cron-jobs/resetConverts.js";
+import { performTask } from "./performTask.js";
 const app = express();
 const port = 5000;
 

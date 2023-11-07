@@ -1,6 +1,6 @@
 import { render } from "@react-email/render";
 import nodemailer from "nodemailer";
-import { ErrorFromQueue } from "./templates/error-from-queue";
+import { ErrorFromQueue } from "./templates/error-from-queue.js";
 import * as React from "react";
 import dotenv from "dotenv";
 dotenv.config();

@@ -7,7 +7,9 @@
   "exports": "./dist/index.js",
   "scripts": {
     "watch": "nodemon --watch './**/*.{ts,graphql,tsx}' --exec node --experimental-specifier-resolution=node --loader ts-node/esm src/index.ts",
-    "dev": "tsc-watch --onSuccess \"npm run watch\""
+    "dev": "tsc-watch --onSuccess \"npm run watch\"",
+    "build": "tsc",
+    "start": "node dist/src/index.js"
   },
   "keywords": [],
   "author": "",

@@ -1,9 +1,3 @@
-/*TASKS
-
-1. Add +1 to uses
-2. Add to db for deletion
-
-*/
 import Pocketbase from "pocketbase";
 
 export async function FinishTask(
@@ -17,8 +11,6 @@ export async function FinishTask(
 }
 
 async function UpdateUses(pb: Pocketbase, uses: number, usesID: string) {
-  const user = pb.authStore.model!;
-
   await pb.collection("convertLimit").update(usesID, {
     uses: uses + 1,
   });

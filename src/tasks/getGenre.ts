@@ -1,7 +1,7 @@
 import type { Track } from "@spotify/web-api-ts-sdk";
 import Pocketbase from "pocketbase";
-import { AddNewTask, GenreArrays } from "../../types";
-import { GetGenreFromAI } from "../ai";
+import { AddNewTask, GenreArrays } from "../../types.js";
+import { GetGenreFromAI } from "../ai.js";
 export default async function GetGenre(
   formattedTracks: Track[],
   pb: Pocketbase,

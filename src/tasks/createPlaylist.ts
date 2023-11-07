@@ -1,6 +1,6 @@
-import { AddNewTask, GenreArrays } from "../../types";
+import { AddNewTask, GenreArrays } from "../../types.js";
 import Pocketbase from "pocketbase";
-import { getSpotify, getSpotifyPlaylist } from "../getSpotify";
+import { getSpotify, getSpotifyPlaylist } from "../getSpotify.js";
 import { SpotifyApi, Playlist } from "@spotify/web-api-ts-sdk";
 import dotenv from "dotenv";
 dotenv.config();
