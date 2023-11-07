@@ -2,7 +2,7 @@ import cron from "node-cron";
 import Pocketbase from "pocketbase";
 import dotenv from "dotenv";
 dotenv.config();
-export const resetConvertsJob = cron.schedule("0 */2 * * *", async () => {
+export const resetConvertsJob = cron.schedule("0 * * * *", async () => {
   console.log("Resetting Converts");
   const pb = new Pocketbase("https://db-listify.arinji.com");
   const email = process.env.ADMIN_EMAIL!;

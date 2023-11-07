@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { getSpotify } from "../getSpotify.js";
 import { AccessToken } from "@spotify/web-api-ts-sdk";
 dotenv.config();
-export const deleteConvertsJob = cron.schedule("0 */2 * * *", async () => {
+export const deleteConvertsJob = cron.schedule("0 * * * *", async () => {
   console.log("Checking For Expired Playlists");
   const pb = new Pocketbase("https://db-listify.arinji.com");
   const email = process.env.ADMIN_EMAIL!;
