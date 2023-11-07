@@ -6,7 +6,7 @@ import { resetConvertsJob } from "./cron-jobs/resetConverts.js";
 import { performTask } from "./performTask.js";
 import dotenv from "dotenv";
 const app = express();
-const port = 5000;
+
 dotenv.config();
 
 app.use(express.json());
@@ -45,7 +45,7 @@ app.post("/addTask", (req: any, res: any) => {
   tasks.push(parsedInput.data);
   res.status(200).json({ message: "Task added to the queue." });
 });
-
+const port = process.env.PORT || 3000;
 app.listen(port, async () => {
   console.log(`Express app listening at http://localhost:${port}`);
   if (!process.env.ADMIN_PASSWORD) throw new Error("ENV FILE NOT FOUND");
