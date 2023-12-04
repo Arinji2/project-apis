@@ -115,7 +115,9 @@ export async function ShuttleAI({
     if (!genres.includes(finalGenre)) throw new Error("ShuttleAI Error");
     else return finalGenre as string;
   } catch {
-    console.log(data);
+    if (data.choices[0]) {
+      console.log(data.choices[0].message);
+    }
     throw new Error("ShuttleAI Error");
   }
 }
