@@ -5,6 +5,7 @@ import { deleteConvertsJob } from "./cron-jobs/deletePlaylists.js";
 import { resetConvertsJob } from "./cron-jobs/resetConverts.js";
 import { performTask } from "./performTask.js";
 import dotenv from "dotenv";
+import { ShuttleAI } from "./ai.js";
 const app = express();
 
 dotenv.config();
@@ -15,7 +16,7 @@ app.use(express.json());
 const tasks: AddNewTask[] = [];
 
 const processTasksAutomatically = () => {
-  console.log("Checking for tasks...");
+  //console.log("Checking for tasks...");
   let taskInProgress = false;
   if (tasks.length > 0) {
     console.log("Tasks in queue: " + tasks.length + ".");
@@ -24,7 +25,7 @@ const processTasksAutomatically = () => {
     if (taskInProgress) return;
     taskInProgress = true;
     performTask(taskInProgress, oldestTask);
-  } else console.log("No tasks in queue.");
+  } // else console.log("No tasks in queue.");
 };
 
 setInterval(processTasksAutomatically, 5000);

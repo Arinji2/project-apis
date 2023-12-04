@@ -10,6 +10,44 @@ export async function GetGenreFromAI({
   songName: string;
   artistNames: string[];
   genres: string[];
+}): Promise<string> {
+  let finalGenre: string = "";
+  console.log(songName);
+
+  await new Promise<void>(async (resolve, reject) => {
+    try {
+      setTimeout(async () => {
+        try {
+          const genre = await ShuttleAI({ songName, artistNames, genres });
+
+          finalGenre = genre;
+          resolve();
+        } catch (shuttleError) {
+          console.log("ShuttleAI FAILED");
+          const replicateGenre = await ReplicateAI({
+            songName,
+            artistNames,
+            genres,
+          });
+          finalGenre = replicateGenre;
+          resolve();
+        }
+      }, 8000);
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+  return finalGenre;
+}
+async function ReplicateAI({
+  songName,
+  artistNames,
+  genres,
+}: {
+  songName: string;
+  artistNames: string[];
+  genres: string[];
 }) {
   const replicate = new Replicate({
     auth: process.env.REPLICATE_KEY,
@@ -35,4 +73,49 @@ export async function GetGenreFromAI({
   const formmatedOutput: string[] = output as string[];
 
   return formmatedOutput[0].toLowerCase();
+}
+export async function ShuttleAI({
+  songName,
+  artistNames,
+  genres,
+}: {
+  songName: string;
+  artistNames: string[];
+  genres: string[];
+}) {
+  const shuttleKey = process.env.SHUTTLE_KEY;
+  const res = await fetch("https://api.shuttleai.app/v1/chat/completions", {
+    headers: {
+      Authorization: `Bearer ${shuttleKey}`,
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Given the song name "${songName}" by artists ${artistNames.join(
+            ","
+          )}. Your objective is to guess the genre of the song, which is ONLY ${genres.join(
+            ","
+          )}. Reply with ONLY the genre name, nothing else. `,
+        },
+      ],
+    }),
+  });
+
+  if (res.status !== 200) throw new Error("ShuttleAI Error");
+
+  const data = await res.json();
+
+  try {
+    const finalGenre = data.choices[0].message.content.toLowerCase();
+
+    if (!genres.includes(finalGenre)) throw new Error("ShuttleAI Error");
+    else return finalGenre as string;
+  } catch {
+    console.log(data);
+    throw new Error("ShuttleAI Error");
+  }
 }
