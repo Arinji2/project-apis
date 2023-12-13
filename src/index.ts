@@ -11,4 +11,5 @@ app.use(express.json());
 const port = process.env.PORT || 3000;
 app.listen(port, async () => {
   console.log(`Express app listening at http://localhost:${port}`);
+  console.log("Press Ctrl+C to quit.");
 });
