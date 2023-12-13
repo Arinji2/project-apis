@@ -1,0 +1,23 @@
+# .github/workflows/pterodactyl-restart.yml
+
+name: Pterodactyl Restart
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Pterodactyl Restart
+      uses: supercrafter100/Pterodactyl-Restart@v1.0
+      with:
+        PTE_PANEL_URL: ${{ secrets.PTE_PANEL_URL }}
+        PTE_BEARER_TOKEN: ${{ secrets.PTE_BEARER_TOKEN }}
+        PTE_PANEL_ID: ${{ secrets.PTE_PANEL_ID }}
