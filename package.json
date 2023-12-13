@@ -1,5 +1,5 @@
 {
-  "name": "project-apis",
+  "name": "vibeify-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -26,11 +26,20 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@react-email/body": "^0.0.4",
+    "@react-email/components": "^0.0.11",
+    "@react-email/container": "^0.0.10",
+    "@react-email/head": "^0.0.6",
+    "@spotify/web-api-ts-sdk": "^1.1.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "node": "^21.1.0",
     "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.7",
     "pocketbase": "^0.19.0",
+    "react": "^18.2.0",
+    "react-email": "^1.9.4",
+    "replicate": "^0.20.1",
     "zod": "^3.22.4"
   }
 }
