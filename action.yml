@@ -1,20 +1,3 @@
-name: "Restart Action"
-description: "Restarts something in the panel"
-author: "Your Name"
-inputs:
-  PTE_BEARER_TOKEN:
-    description: "The bearer token for authentication"
-    required: true
-  PTE_PANEL_ID:
-    description: "The panel ID"
-    required: true
-runs:
-  using: "composite"
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Run custom script
-      run: |
-
-      shell: bash
+              - name: Pterodactyl-Restart
+                uses: supercrafter100/Pterodactyl-Restart@v1.0
+            
