@@ -1,0 +1,17 @@
+name: Restart
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          PTE_PANEL_URL: 'https://panel.example.com'
+          PTE_BEARER_TOKEN: ${{ secrets.PTE_BEARER_TOKEN }}
+          PTE_PANEL_ID: ${{ secrets.PTE_PANEL_ID }}
