@@ -1,0 +1,13 @@
+name: "Restart Action"
+description: "Restarts something in the panel"
+author: "Arinji2"
+inputs:
+  PTE_BEARER_TOKEN:
+    description: "The bearer token for authentication"
+    required: true
+  PTE_PANEL_ID:
+    description: "The panel ID"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"
