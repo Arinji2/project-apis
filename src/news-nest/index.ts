@@ -1,7 +1,6 @@
-import express from "express";
 import { getNews } from "./functions/getNews";
 import { setNews } from "./functions/setNews";
-export const app = express();
+
 import cron from "node-cron";
 
 const task = cron.schedule("0 0 */2 * *", async () => {
