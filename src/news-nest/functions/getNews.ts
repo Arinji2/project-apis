@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { NewsItemsSchema } from "../schema";
+import { NewsItemsSchema } from "../schema.js";
 import { CategoryType, CountryType, NewsItemType } from "../types";
 dotenv.config();
 console.log();
@@ -18,16 +18,27 @@ export async function getNews() {
 
 async function getLiveNews() {
   try {
-    const res = await fetch(
-      `http://api.mediastack.com/v1/news?access_key=edc91c7eede0cf52bab825bacfa1907d&sources=en,&countries=us,gb,in&sort=popularity&limit=5`
+    const response = await fetch(
+      "https://newsapi.org/v2/top-headlines?country=in&language=en&pageSize=5",
+      {
+        headers: {
+          "X-Api-Key": `${process.env.NEWS_KEY}`,
+        },
+      }
     );
+    const data = await response.json();
 
-    const data = await res.json();
-
-    const parsedData: NewsItemType[] = NewsItemsSchema.parse(data.data);
+    if (data.length !== 0) {
+      data.articles = data.articles.filter(
+        (article: any) => article.description && article.url && article.title
+      );
+    }
+    const parsedData: NewsItemType[] = NewsItemsSchema.parse(data.articles);
+    console.log(parsedData);
 
     return parsedData;
   } catch (error) {
+    console.log(error);
     return null;
   }
 }
@@ -50,15 +61,24 @@ async function getCategoryNews() {
     };
     await Promise.all(
       categories.map(async (category) => {
-        const res = await fetch(
-          `http://api.mediastack.com/v1/news?access_key=edc91c7eede0cf52bab825bacfa1907d&languages=en&categories=${category}&sort=popularity&limit=5`
+        const response = await fetch(
+          `https://newsapi.org/v2/everything?q=${category}&language=en&pageSize=5`,
+          {
+            headers: {
+              "X-Api-Key": `${process.env.NEWS_KEY}`,
+            },
+          }
         );
-
-        const data = await res.json();
+        const data = await response.json();
 
         if (data.length !== 0) {
-          const parsedData: NewsItemType[] = NewsItemsSchema.parse(data.data);
-          console.log(parsedData.forEach((item) => console.log(item.category)));
+          data.articles = data.articles.filter(
+            (article: any) =>
+              article.description && article.url && article.title
+          );
+          const parsedData: NewsItemType[] = NewsItemsSchema.parse(
+            data.articles
+          );
 
           categoryNews[category as keyof CategoryType] = parsedData;
         }
@@ -70,6 +90,7 @@ async function getCategoryNews() {
     return null;
   }
 }
+
 async function getCountryNews() {
   try {
     const country = ["cn", "in", "us", "id", "pk", "br", "ng"];
@@ -85,15 +106,25 @@ async function getCountryNews() {
     };
     await Promise.all(
       country.map(async (country) => {
-        const res = await fetch(
-          `http://api.mediastack.com/v1/news?access_key=edc91c7eede0cf52bab825bacfa1907d&countries=${country}&sort=popularity&limit=5`
+        const response = await fetch(
+          `https://newsapi.org/v2/top-headlines?country=${country}&pageSize=5`,
+          {
+            headers: {
+              "X-Api-Key": `${process.env.NEWS_KEY}`,
+            },
+          }
         );
-
-        const data = await res.json();
+        const data = await response.json();
 
         if (data.length !== 0) {
-          const parsedData: NewsItemType[] = NewsItemsSchema.parse(data.data);
-          console.log(parsedData);
+          data.articles = data.articles.filter(
+            (article: any) =>
+              article.description && article.url && article.title
+          );
+          const parsedData: NewsItemType[] = NewsItemsSchema.parse(
+            data.articles
+          );
+
           countryNews[country as keyof CountryType] = parsedData;
         }
       })
@@ -101,6 +132,7 @@ async function getCountryNews() {
 
     return countryNews;
   } catch (error) {
+    console.log(error);
     return null;
   }
 }

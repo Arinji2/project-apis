@@ -6,17 +6,12 @@ export const NewsItemSchema = z.object({
   title: z.string(),
   description: z.string(),
   url: z.string().url(),
-  source: z.string(),
-  image: z.string().nullable(),
 
-  category: z.string(),
-  language: z.string(),
-  country: z.string(),
-  published_at: z
+  urlToImage: z.string().nullable(),
+
+  publishedAt: z
     .string()
-    .refine((dateString) => !isNaN(Date.parse(dateString)), {
-      message: "Invalid date format",
-    })
+
     .transform(parseDateString),
 });
 

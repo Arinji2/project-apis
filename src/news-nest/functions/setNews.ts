@@ -1,4 +1,4 @@
-import { CategoryType, CountryType, NewsItemType } from "../types";
+import { CategoryType, CountryType, NewsItemType } from "../types.js";
 import Pocketbase from "pocketbase";
 import dotenv from "dotenv";
 dotenv.config();
@@ -11,7 +11,6 @@ type Props = {
 export async function setNews(data: Props) {
   const pb = new Pocketbase("https://db-news.arinji.com/");
   pb.autoCancellation(false);
-  console.log(process.env.ADMIN_EMAIL!, process.env.ADMIN_PASSWORD!);
 
   await pb.admins.authWithPassword(
     process.env.ADMIN_EMAIL!,
