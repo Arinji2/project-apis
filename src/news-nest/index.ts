@@ -4,8 +4,9 @@ import { setNews } from "./functions/setNews.js";
 
 import chalk from "chalk";
 import cron from "node-cron";
+import { deleteOldNewsTask } from "./functions/deleteNews.js";
 
-const task = cron.schedule("0 0 */12 * *", async () => {
+const getNewsTask = cron.schedule("0 0 */12 * *", async () => {
   const news = await getNews();
   await setNews({
     liveNews: news.liveNews,
@@ -18,17 +19,13 @@ const task = cron.schedule("0 0 */12 * *", async () => {
   console.log(chalk.blue("NEWS-NEST: NEWS UPDATED"));
 });
 
-task.start();
+getNewsTask.start();
+deleteOldNewsTask.start();
 export const defaultRoute = Router();
 
 defaultRoute.get("/", async (req, res) => {
   console.log(chalk.blue("NEWS-NEST: REQUEST RECEIVED"));
-  const news = await getNews();
-  await setNews({
-    liveNews: news.liveNews,
-    categoryNews: news.categoryNews,
-    countryNews: news.countryNews,
-  });
+
   res.send("NEWS-NEST: REQUEST RECEIVED");
 });
 export const routes = express.Router();
