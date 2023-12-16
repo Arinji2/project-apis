@@ -15,6 +15,6 @@ app.set("json spaces", 2);
 const port = process.env.PORT || 3000;
 app.listen(port, async () => {
   console.log(`Express app listening at http://localhost:${port}`);
-  app.use("/", routes);
+  app.use("/news", routes);
   console.log(chalk.red("NEWS-NEST: API STARTED"));
 });

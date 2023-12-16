@@ -8,14 +8,20 @@ export type CategoryType = {
   sports: NewsItemType[];
   technology: NewsItemType[];
 };
-
+export const country = [
+  "cn",
+  "in",
+  "us",
+  "id",
+  "pk",
+  "br",
+  "ng",
+  "fr",
+  "de",
+  "ru",
+  "sa",
+  "ca",
+];
 export type CountryType = {
-  ar: NewsItemType[];
-  au: NewsItemType[];
-  br: NewsItemType[];
-  ca: NewsItemType[];
-  fr: NewsItemType[];
-  de: NewsItemType[];
-  in: NewsItemType[];
-  us: NewsItemType[];
+  [key in (typeof country)[number]]: NewsItemType[];
 };

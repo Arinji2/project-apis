@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { NewsItemsSchema } from "../schema.js";
-import { CategoryType, CountryType, NewsItemType } from "../types";
+import { CategoryType, CountryType, NewsItemType, country } from "../types.js";
 dotenv.config();
 console.log();
 
@@ -19,7 +19,7 @@ export async function getNews() {
 async function getLiveNews() {
   try {
     const response = await fetch(
-      "https://newsapi.org/v2/top-headlines?country=in&language=en&pageSize=5",
+      "https://newsapi.org/v2/top-headlines?language=en&pageSize=5",
       {
         headers: {
           "X-Api-Key": `${process.env.NEWS_KEY}`,
@@ -34,11 +34,9 @@ async function getLiveNews() {
       );
     }
     const parsedData: NewsItemType[] = NewsItemsSchema.parse(data.articles);
-    console.log(parsedData);
 
     return parsedData;
   } catch (error) {
-    console.log(error);
     return null;
   }
 }
@@ -93,21 +91,11 @@ async function getCategoryNews() {
 
 async function getCountryNews() {
   try {
-    const country = ["cn", "in", "us", "id", "pk", "br", "ng"];
-    let countryNews: CountryType = {
-      ar: [],
-      au: [],
-      br: [],
-      ca: [],
-      fr: [],
-      de: [],
-      in: [],
-      us: [],
-    };
+    let countryNews: CountryType = {};
     await Promise.all(
       country.map(async (country) => {
         const response = await fetch(
-          `https://newsapi.org/v2/top-headlines?country=${country}&pageSize=5`,
+          `https://newsapi.org/v2/top-headlines?country=${country}&pageSize=10`,
           {
             headers: {
               "X-Api-Key": `${process.env.NEWS_KEY}`,

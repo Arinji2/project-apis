@@ -20,10 +20,20 @@ export async function setNews(data: Props) {
   if (data.liveNews) {
     await Promise.all(
       data.liveNews.map(async (newsItem) => {
-        const jsonData = JSON.stringify(newsItem);
-        await pb.collection("live").create({
-          data: jsonData,
-        });
+        try {
+          await pb
+            .collection("live")
+            .getFirstListItem(`url = "${newsItem.url}"`);
+        } catch (e) {
+          await pb.collection("live").create({
+            title: newsItem.title,
+            description: newsItem.description,
+            publishedAt: newsItem.publishedAt,
+            author: newsItem.author,
+            url: newsItem.url,
+            urlToImage: newsItem.urlToImage,
+          });
+        }
       })
     );
   }
@@ -33,11 +43,21 @@ export async function setNews(data: Props) {
         await Promise.all(
           data.categoryNews![category as keyof CategoryType].map(
             async (newsItem) => {
-              const jsonData = JSON.stringify(newsItem);
-              await pb.collection("category").create({
-                data: jsonData,
-                category: category,
-              });
+              try {
+                await pb
+                  .collection("category")
+                  .getFirstListItem(`url = "${newsItem.url}"`);
+              } catch (e) {
+                await pb.collection("category").create({
+                  title: newsItem.title,
+                  description: newsItem.description,
+                  publishedAt: newsItem.publishedAt,
+                  author: newsItem.author,
+                  url: newsItem.url,
+                  urlToImage: newsItem.urlToImage,
+                  category: category,
+                });
+              }
             }
           )
         );
@@ -45,18 +65,27 @@ export async function setNews(data: Props) {
     );
   }
 
-  console.log(data.countryNews);
   if (data.countryNews) {
     await Promise.all(
       Object.keys(data.countryNews).map(async (country) => {
         await Promise.all(
           data.countryNews![country as keyof CountryType].map(
             async (newsItem) => {
-              const jsonData = JSON.stringify(newsItem);
-              await pb.collection("country").create({
-                data: jsonData,
-                country: country,
-              });
+              try {
+                await pb
+                  .collection("country")
+                  .getFirstListItem(`url = "${newsItem.url}"`);
+              } catch (e) {
+                await pb.collection("country").create({
+                  title: newsItem.title,
+                  description: newsItem.description,
+                  publishedAt: newsItem.publishedAt,
+                  author: newsItem.author,
+                  url: newsItem.url,
+                  urlToImage: newsItem.urlToImage,
+                  country: country,
+                });
+              }
             }
           )
         );
