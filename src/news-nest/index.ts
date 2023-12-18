@@ -6,17 +6,22 @@ import chalk from "chalk";
 import cron from "node-cron";
 import { deleteOldNewsTask } from "./functions/deleteNews.js";
 
-const getNewsTask = cron.schedule("0 0 */12 * *", async () => {
-  const news = await getNews();
-  await setNews({
-    liveNews: news.liveNews,
-    categoryNews: news.categoryNews,
-    countryNews: news.countryNews,
-  });
-  await fetch("https://news.arinji.com/api/revalidate", {
-    method: "POST",
-  });
-  console.log(chalk.blue("NEWS-NEST: NEWS UPDATED"));
+const getNewsTask = cron.schedule("0 * * * *", async () => {
+  try {
+    const news = await getNews();
+    await setNews({
+      liveNews: news.liveNews,
+      categoryNews: news.categoryNews,
+      countryNews: news.countryNews,
+    });
+    await fetch("https://news.arinji.com/api/revalidate", {
+      method: "POST",
+    });
+    console.log(chalk.green("NEWS-NEST: NEWS UPDATED"));
+  } catch (e: any) {
+    console.log(chalk.red("NEWS-NEST: ERROR UPDATING NEWS"));
+    console.log(e.originalError.data);
+  }
 });
 
 getNewsTask.start();
