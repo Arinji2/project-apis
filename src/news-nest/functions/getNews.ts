@@ -28,7 +28,7 @@ async function getLiveNews() {
     );
     const data = await response.json();
 
-    if (data.length !== 0) {
+    if (data.length !== 0 && data !== undefined) {
       data.articles = data.articles.filter(
         (article: any) => article.description && article.url && article.title
       );
@@ -69,7 +69,7 @@ async function getCategoryNews() {
         );
         const data = await response.json();
 
-        if (data.length !== 0) {
+        if (data.length !== 0 && data !== undefined) {
           data.articles = data.articles.filter(
             (article: any) =>
               article.description && article.url && article.title
@@ -104,7 +104,7 @@ async function getCountryNews() {
         );
         const data = await response.json();
 
-        if (data.length !== 0) {
+        if (data.length !== 0 && data !== undefined) {
           data.articles = data.articles.filter(
             (article: any) =>
               article.description && article.url && article.title
