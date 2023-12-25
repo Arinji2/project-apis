@@ -49,6 +49,7 @@ async function getCategoryNews() {
       "entertainment",
       "science",
       "technology",
+      "comedy",
     ];
     let categoryNews: CategoryType = {
       business: [],
@@ -56,6 +57,7 @@ async function getCategoryNews() {
       science: [],
       sports: [],
       technology: [],
+      comedy: [],
     };
     await Promise.all(
       categories.map(async (category) => {

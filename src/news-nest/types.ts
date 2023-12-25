@@ -7,6 +7,7 @@ export type CategoryType = {
   science: NewsItemType[];
   sports: NewsItemType[];
   technology: NewsItemType[];
+  comedy: NewsItemType[];
 };
 export const country = [
   "cn",
