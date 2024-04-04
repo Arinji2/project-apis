@@ -1,7 +1,5 @@
-import { CategoryType, CountryType, NewsItemType } from "../types.js";
 import Pocketbase from "pocketbase";
-import dotenv from "dotenv";
-dotenv.config();
+import type { CategoryType, CountryType, NewsItemType } from "../types.js";
 
 type Props = {
   liveNews: NewsItemType[] | null;
@@ -12,7 +10,7 @@ export async function setNews(data: Props) {
   const pb = new Pocketbase("https://db-news.arinji.com/");
   pb.autoCancellation(false);
 
-  await pb.admins.authWithPassword(
+  const res = await pb.admins.authWithPassword(
     process.env.ADMIN_EMAIL!,
     process.env.ADMIN_PASSWORD!
   );
@@ -25,14 +23,18 @@ export async function setNews(data: Props) {
             .collection("live")
             .getFirstListItem(`url = "${newsItem.url}"`);
         } catch (e) {
-          await pb.collection("live").create({
-            title: newsItem.title,
-            description: newsItem.description,
-            publishedAt: newsItem.publishedAt,
-            author: newsItem.author,
-            url: newsItem.url,
-            urlToImage: newsItem.urlToImage,
-          });
+          try {
+            await pb.collection("live").create({
+              title: newsItem.title,
+              description: newsItem.description,
+              publishedAt: newsItem.publishedAt,
+              author: newsItem.author,
+              url: newsItem.url,
+              urlToImage: newsItem.urlToImage,
+            });
+          } catch (e) {
+            console.error("Error creating live news", e);
+          }
         }
       })
     );

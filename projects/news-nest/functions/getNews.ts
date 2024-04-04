@@ -1,8 +1,6 @@
-import dotenv from "dotenv";
 import { NewsItemsSchema } from "../schema.js";
-import { CategoryType, CountryType, NewsItemType, country } from "../types.js";
-dotenv.config();
-console.log();
+import type { CategoryType, CountryType, NewsItemType } from "../types.ts";
+import { country } from "../types.ts";
 
 export async function getNews() {
   const liveNews = await getLiveNews();
@@ -122,7 +120,6 @@ async function getCountryNews() {
 
     return countryNews;
   } catch (error) {
-    console.log(error);
     return null;
   }
 }

@@ -7,7 +7,15 @@ export const NewsItemSchema = z.object({
   description: z.string(),
   url: z.string().url(),
 
-  urlToImage: z.string().nullable(),
+  urlToImage: z
+    .string()
+    .nullable()
+    .transform((url) => {
+      if (typeof url === "string") {
+        if (url.startsWith("http") || url.startsWith("https")) return url;
+        else return null;
+      }
+    }),
 
   publishedAt: z
     .string()
