@@ -78,6 +78,7 @@ export async function ArinjiAI({
   const res = await fetch("https://ai.arinji.com/completions", {
     headers: {
       Authorization: `${process.env.API_ACCESS_KEY}`,
+      FROM: "VIBEIFY",
       "Content-Type": "application/json",
     },
     method: "POST",
