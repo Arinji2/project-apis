@@ -34,13 +34,11 @@ export async function InsertWords() {
 
   await Promise.all(fakeDBPromises);
   await Promise.all(realDBPromises);
-
-  console.log("VALUES INSERTED");
 }
 let count = 0;
 async function generateWord(fake: boolean) {
   count++;
-  console.log("Generating Word", fake);
+
   const res = await fetch("https://ai.arinji.com/completions", {
     method: "POST",
     headers: {
