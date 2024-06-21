@@ -7,6 +7,5 @@ export const WordSchema = z.object({
 export const StoredWordSchema = z.object({
   word: z.string(),
   definition: z.string(),
-  last_used: z.date(),
   created_on: z.date(),
 });
