@@ -2,6 +2,66 @@ import { query } from "../../connect";
 import { StoredWordSchema } from "../../schema";
 import type { StoredWordSchemaType } from "../../types";
 
+function DeleteWords(words: StoredWordSchemaType[], table: string) {
+  // if (words.length > 100) {
+  //   const deletePromises = words.slice(0, 30).map(async (word) => {
+  //     return await query(`DELETE FROM \`${table}\` WHERE word = ?`, [
+  //       word.word,
+  //     ]);
+  //   });
+
+  //   return Promise.all(deletePromises);
+  // }
+  let deletePromises: Promise<any>[] = [];
+  const numberOfEasyWords = words.filter((word) => word.level === 1).length;
+  const numberOfMediumWords = words.filter((word) => word.level === 2).length;
+  const numberOfHardWords = words.filter((word) => word.level === 3).length;
+
+  if (numberOfEasyWords >= 100) {
+    deletePromises = [
+      ...deletePromises,
+      ...words
+        .filter((word) => word.level === 1)
+        .slice(0, 30)
+        .map(async (word) => {
+          return await query(`DELETE FROM ${table} WHERE word = ?`, [
+            word.word,
+          ]);
+        }),
+    ];
+  }
+
+  if (numberOfMediumWords >= 100) {
+    deletePromises = [
+      ...deletePromises,
+      ...words
+        .filter((word) => word.level === 2)
+        .slice(0, 30)
+        .map(async (word) => {
+          return await query(`DELETE FROM ${table} WHERE word = ?`, [
+            word.word,
+          ]);
+        }),
+    ];
+  }
+
+  if (numberOfHardWords >= 100) {
+    deletePromises = [
+      ...deletePromises,
+      ...words
+        .filter((word) => word.level === 3)
+        .slice(0, 30)
+        .map(async (word) => {
+          return await query(`DELETE FROM ${table} WHERE word = ?`, [
+            word.word,
+          ]);
+        }),
+    ];
+  }
+
+  return Promise.all(deletePromises);
+}
+
 export async function ResetWords() {
   const rawFakeWords = await query("SELECT * FROM `fake_words`");
   const rawRealWords = await query("SELECT * FROM `real_words`");
@@ -34,23 +94,9 @@ export async function ResetWords() {
     return aDate - bDate;
   });
 
-  if (parsedFakeWords.length > 100) {
-    const deletePromises = parsedFakeWords.slice(0, 30).map(async (word) => {
-      return await query("DELETE FROM `fake_words` WHERE word = ?", [
-        word.word,
-      ]);
-    });
+  const fakeDeletePromises = await DeleteWords(parsedFakeWords, "fake_words");
+  const realDeletePromises = await DeleteWords(parsedRealWords, "real_words");
 
-    await Promise.all(deletePromises);
-  }
-
-  if (parsedRealWords.length > 100) {
-    const deletePromises = parsedRealWords.slice(0, 30).map(async (word) => {
-      return await query("DELETE FROM `real_words` WHERE word = ?", [
-        word.word,
-      ]);
-    });
-
-    await Promise.all(deletePromises);
-  }
+  await Promise.all(fakeDeletePromises);
+  await Promise.all(realDeletePromises);
 }

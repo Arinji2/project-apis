@@ -5,6 +5,7 @@ export const WordSchema = z.object({
 });
 
 export const StoredWordSchema = z.object({
+  level: z.number(),
   word: z.string(),
   definition: z.string(),
   created_on: z.date(),
