@@ -6,7 +6,7 @@ import { ResetWords } from "./functions/cron-jobs/resetWords";
 
 const app = new Hono();
 
-const tasks = cron.schedule("*/30 * * * *", async () => {
+const tasks = cron.schedule("0 */2 * * *", async () => {
   await ResetWords();
   await InsertWords();
 });
