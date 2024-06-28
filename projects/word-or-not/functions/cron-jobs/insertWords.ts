@@ -1,9 +1,11 @@
-import { query } from "../../connect";
+import { connectToPB } from "../../connect";
 import { StoredWordSchema, WordSchema } from "../../schema";
 import type { StoredWordSchemaType } from "../../types";
 
 async function getLevel(table: string) {
-  const rawWords = await query(`SELECT * FROM ${table}`);
+  const pb = await connectToPB();
+
+  const rawWords = await pb.collection(table).getFullList();
   const parsedWords = rawWords
     .map((word) => {
       const parse = StoredWordSchema.safeParse(word);
@@ -34,6 +36,7 @@ async function getLevel(table: string) {
 }
 
 export async function InsertWords() {
+  const pb = await connectToPB();
   const fakeLevel = await getLevel("fake_words");
   const realLevel = await getLevel("real_words");
   const fakePromises = [...Array(6).keys()].map(async (i) => {
@@ -50,30 +53,30 @@ export async function InsertWords() {
   fakeWords = fakeWords.filter((word) => word.word !== "FAIL");
   realWords = realWords.filter((word) => word.word !== "FAIL");
 
-  const fakeDBPromises = fakeWords.map(async (word) => {
-    const flag = await query("SELECT * FROM `fake_words` WHERE word = ?", [
-      word.word,
-    ]);
-    if (flag.length > 0) return;
-    return await query(
-      "INSERT INTO `fake_words` (word, definition, level) VALUES (?, ?, ?)",
-      [word.word, word.definition, fakeLevel]
-    );
-  });
-
-  const realDBPromises = realWords.map(async (word) => {
-    const flag = await query("SELECT * FROM `real_words` WHERE word = ?", [
-      word.word,
-    ]);
-    if (flag.length > 0) return;
-    return await query(
-      "INSERT INTO `real_words` (word, definition, level) VALUES (?, ?, ?)",
-      [word.word, word.definition, realLevel]
-    );
-  });
-
-  await Promise.all(fakeDBPromises);
-  await Promise.all(realDBPromises);
+  for (const word of fakeWords) {
+    try {
+      await pb.collection("fake_words").getFirstListItem(`word="${word.word}"`);
+    } catch (e) {
+      await pb.collection("fake_words").create({
+        word: word.word,
+        definition: word.definition,
+        level: fakeLevel,
+        created_on: new Date(),
+      });
+    }
+  }
+  for (const word of realWords) {
+    try {
+      await pb.collection("real_words").getFirstListItem(`word="${word.word}"`);
+    } catch (e) {
+      await pb.collection("real_words").create({
+        word: word.word,
+        definition: word.definition,
+        level: realLevel,
+        created_on: new Date(),
+      });
+    }
+  }
 }
 let count = 0;
 async function generateWord(fake: boolean, level: 1 | 2 | 3) {

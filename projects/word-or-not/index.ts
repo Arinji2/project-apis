@@ -6,7 +6,7 @@ import { ResetWords } from "./functions/cron-jobs/resetWords";
 
 const app = new Hono();
 
-const tasks = cron.schedule("0 */2 * * *", async () => {
+const tasks = cron.schedule("0 */1 * * *", async () => {
   await ResetWords();
   await InsertWords();
 });
@@ -14,6 +14,7 @@ const tasks = cron.schedule("0 */2 * * *", async () => {
 app.get("/", async (c) => {
   console.log(chalk.blue("WORD OR NOT: REQUEST RECEIVED"));
   c.status(200);
+
   return c.text("WORD OR NOT: REQUEST RECEIVED");
 });
 

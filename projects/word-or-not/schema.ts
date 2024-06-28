@@ -9,4 +9,5 @@ export const StoredWordSchema = z.object({
   word: z.string(),
   definition: z.string(),
   created_on: z.date(),
+  id: z.string(),
 });

@@ -1,17 +1,9 @@
-import { query } from "../../connect";
+import { connectToPB } from "../../connect";
 import { StoredWordSchema } from "../../schema";
 import type { StoredWordSchemaType } from "../../types";
 
-function DeleteWords(words: StoredWordSchemaType[], table: string) {
-  // if (words.length > 100) {
-  //   const deletePromises = words.slice(0, 30).map(async (word) => {
-  //     return await query(`DELETE FROM \`${table}\` WHERE word = ?`, [
-  //       word.word,
-  //     ]);
-  //   });
-
-  //   return Promise.all(deletePromises);
-  // }
+async function DeleteWords(words: StoredWordSchemaType[], table: string) {
+  const pb = await connectToPB();
   let deletePromises: Promise<any>[] = [];
   const numberOfEasyWords = words.filter((word) => word.level === 1).length;
   const numberOfMediumWords = words.filter((word) => word.level === 2).length;
@@ -24,9 +16,7 @@ function DeleteWords(words: StoredWordSchemaType[], table: string) {
         .filter((word) => word.level === 1)
         .slice(0, 30)
         .map(async (word) => {
-          return await query(`DELETE FROM ${table} WHERE word = ?`, [
-            word.word,
-          ]);
+          return await pb.collection(table).delete(word.id);
         }),
     ];
   }
@@ -38,9 +28,7 @@ function DeleteWords(words: StoredWordSchemaType[], table: string) {
         .filter((word) => word.level === 2)
         .slice(0, 30)
         .map(async (word) => {
-          return await query(`DELETE FROM ${table} WHERE word = ?`, [
-            word.word,
-          ]);
+          return await pb.collection(table).delete(word.id);
         }),
     ];
   }
@@ -52,9 +40,7 @@ function DeleteWords(words: StoredWordSchemaType[], table: string) {
         .filter((word) => word.level === 3)
         .slice(0, 30)
         .map(async (word) => {
-          return await query(`DELETE FROM ${table} WHERE word = ?`, [
-            word.word,
-          ]);
+          return await pb.collection(table).delete(word.id);
         }),
     ];
   }
@@ -63,8 +49,9 @@ function DeleteWords(words: StoredWordSchemaType[], table: string) {
 }
 
 export async function ResetWords() {
-  const rawFakeWords = await query("SELECT * FROM `fake_words`");
-  const rawRealWords = await query("SELECT * FROM `real_words`");
+  const pb = await connectToPB();
+  const rawFakeWords = await pb.collection("fake_words").getFullList();
+  const rawRealWords = await pb.collection("real_words").getFullList();
 
   let parsedFakeWords = rawFakeWords
     .map((word) => {
