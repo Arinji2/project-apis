@@ -16,7 +16,10 @@ async function DeleteWords(words: StoredWordSchemaType[], table: string) {
         .filter((word) => word.level === 1)
         .slice(0, 30)
         .map(async (word) => {
-          return await pb.collection(table).delete(word.id);
+          return await pb.collection(table).update(word.id, {
+            deleted: true,
+            definition: "",
+          });
         }),
     ];
   }
@@ -28,7 +31,10 @@ async function DeleteWords(words: StoredWordSchemaType[], table: string) {
         .filter((word) => word.level === 2)
         .slice(0, 30)
         .map(async (word) => {
-          return await pb.collection(table).delete(word.id);
+          return await pb.collection(table).update(word.id, {
+            deleted: true,
+            definition: "",
+          });
         }),
     ];
   }
@@ -40,7 +46,10 @@ async function DeleteWords(words: StoredWordSchemaType[], table: string) {
         .filter((word) => word.level === 3)
         .slice(0, 30)
         .map(async (word) => {
-          return await pb.collection(table).delete(word.id);
+          return await pb.collection(table).update(word.id, {
+            deleted: true,
+            definition: "",
+          });
         }),
     ];
   }
@@ -57,13 +66,15 @@ export async function ResetWords() {
     .map((word) => {
       const parse = StoredWordSchema.safeParse(word);
       if (parse.success) return parse.data as StoredWordSchemaType;
-      else return null;
+      else {
+        return null;
+      }
     })
     .filter((word) => word !== null) as unknown as StoredWordSchemaType[];
 
   parsedFakeWords = parsedFakeWords.sort((a, b) => {
-    const aDate = new Date(a.created_on).getTime();
-    const bDate = new Date(b.created_on).getTime();
+    const aDate = new Date(a.created).getTime();
+    const bDate = new Date(b.created).getTime();
     return aDate - bDate;
   });
 
@@ -76,8 +87,8 @@ export async function ResetWords() {
     .filter((word) => word !== null) as unknown as StoredWordSchemaType[];
 
   parsedRealWords = parsedRealWords.sort((a, b) => {
-    const aDate = new Date(a.created_on).getTime();
-    const bDate = new Date(b.created_on).getTime();
+    const aDate = new Date(a.created).getTime();
+    const bDate = new Date(b.created).getTime();
     return aDate - bDate;
   });
 
