@@ -15,6 +15,9 @@ app.get("/", async (c) => {
   console.log(chalk.blue("WORD OR NOT: REQUEST RECEIVED"));
   c.status(200);
 
+  await ResetWords();
+  console.log(chalk.blue("WORD OR NOT: WORDS RESET"));
+
   return c.text("WORD OR NOT: REQUEST RECEIVED");
 });
 
