@@ -7,9 +7,8 @@ export type CategoryType = {
   science: NewsItemType[];
   sports: NewsItemType[];
   technology: NewsItemType[];
-  comedy: NewsItemType[];
 };
-export const country = ["cn", "in", "us", "ru", "sa", "ca"];
+export const country = ["cn", "in", "us", "ru", "za", "ca"];
 export type CountryType = {
   [key in (typeof country)[number]]: NewsItemType[];
 };

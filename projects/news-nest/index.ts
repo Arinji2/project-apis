@@ -6,7 +6,7 @@ import { getNews } from "./functions/getNews.ts";
 import { setNews } from "./functions/setNews.ts";
 
 const app = new Hono();
-const getNewsTask = cron.schedule("0 0 */14 * *", async () => {
+const getNewsTask = cron.schedule("0 */5 * * *", async () => {
   const news = await getNews();
 
   await setNews({

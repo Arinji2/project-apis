@@ -4,6 +4,7 @@ import { country } from "../types.ts";
 
 export async function getNews() {
   const liveNews = await getLiveNews();
+
   const categoryNews = await getCategoryNews();
   const countryNews = await getCountryNews();
 
@@ -17,7 +18,7 @@ export async function getNews() {
 async function getLiveNews() {
   try {
     const response = await fetch(
-      "https://newsapi.org/v2/top-headlines?language=en&pageSize=5",
+      `https://newsdata.io/api/1/latest?apikey=${process.env.NEWS_KEY}&image=1&removeduplicate=1&language=en`,
       {
         headers: {
           "X-Api-Key": `${process.env.NEWS_KEY}`,
@@ -26,12 +27,20 @@ async function getLiveNews() {
     );
     const data = await response.json();
 
-    if (data.length !== 0 && data !== undefined) {
-      data.articles = data.articles.filter(
-        (article: any) => article.description && article.url && article.title
-      );
-    }
-    const parsedData: NewsItemType[] = NewsItemsSchema.parse(data.articles);
+    data.results = data.results.map((result: { [key: string]: any }) => {
+      if (
+        result.source_name &&
+        result.title &&
+        result.description &&
+        result.link &&
+        result.pubDate
+      ) {
+        return result;
+      } else return null;
+    });
+
+    data.results = data.results.filter((result: any) => result !== null);
+    const parsedData: NewsItemType[] = NewsItemsSchema.parse(data.results);
 
     return parsedData;
   } catch (error) {
@@ -47,7 +56,6 @@ async function getCategoryNews() {
       "entertainment",
       "science",
       "technology",
-      "comedy",
     ];
     let categoryNews: CategoryType = {
       business: [],
@@ -55,12 +63,11 @@ async function getCategoryNews() {
       science: [],
       sports: [],
       technology: [],
-      comedy: [],
     };
     await Promise.all(
       categories.map(async (category) => {
         const response = await fetch(
-          `https://newsapi.org/v2/everything?q=${category}&language=en&pageSize=5`,
+          `https://newsdata.io/api/1/latest?apikey=${process.env.NEWS_KEY}&category=${category}&image=1&removeduplicate=1&language=en`,
           {
             headers: {
               "X-Api-Key": `${process.env.NEWS_KEY}`,
@@ -69,17 +76,22 @@ async function getCategoryNews() {
         );
         const data = await response.json();
 
-        if (data.length !== 0 && data !== undefined) {
-          data.articles = data.articles.filter(
-            (article: any) =>
-              article.description && article.url && article.title
-          );
-          const parsedData: NewsItemType[] = NewsItemsSchema.parse(
-            data.articles
-          );
+        data.results = data.results.map((result: { [key: string]: any }) => {
+          if (
+            result.source_name &&
+            result.title &&
+            result.description &&
+            result.link &&
+            result.pubDate
+          ) {
+            return result;
+          } else return null;
+        });
 
-          categoryNews[category as keyof CategoryType] = parsedData;
-        }
+        data.results = data.results.filter((result: any) => result !== null);
+        const parsedData: NewsItemType[] = NewsItemsSchema.parse(data.results);
+
+        categoryNews[category as keyof CategoryType] = parsedData;
       })
     );
 
@@ -95,7 +107,7 @@ async function getCountryNews() {
     await Promise.all(
       country.map(async (country) => {
         const response = await fetch(
-          `https://newsapi.org/v2/top-headlines?country=${country}&pageSize=10`,
+          `https://newsdata.io/api/1/latest?apikey=${process.env.NEWS_KEY}&country=${country}&image=1&removeduplicate=1`,
           {
             headers: {
               "X-Api-Key": `${process.env.NEWS_KEY}`,
@@ -104,17 +116,22 @@ async function getCountryNews() {
         );
         const data = await response.json();
 
-        if (data.length !== 0 && data !== undefined) {
-          data.articles = data.articles.filter(
-            (article: any) =>
-              article.description && article.url && article.title
-          );
-          const parsedData: NewsItemType[] = NewsItemsSchema.parse(
-            data.articles
-          );
+        data.results = data.results.map((result: { [key: string]: any }) => {
+          if (
+            result.source_name &&
+            result.title &&
+            result.description &&
+            result.link &&
+            result.pubDate
+          ) {
+            return result;
+          } else return null;
+        });
 
-          countryNews[country as keyof CountryType] = parsedData;
-        }
+        data.results = data.results.filter((result: any) => result !== null);
+        const parsedData: NewsItemType[] = NewsItemsSchema.parse(data.results);
+
+        countryNews[country as keyof CountryType] = parsedData;
       })
     );
 

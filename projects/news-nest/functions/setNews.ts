@@ -19,9 +19,17 @@ export async function setNews(data: Props) {
     await Promise.all(
       data.liveNews.map(async (newsItem) => {
         try {
+          if (newsItem.url.startsWith(`"`) && newsItem.url.endsWith(`"`)) {
+            newsItem.url = newsItem.url.slice(1, -1);
+          }
+          if (newsItem.title.startsWith(`"`) && newsItem.title.endsWith(`"`)) {
+            newsItem.title = newsItem.title.slice(1, -1);
+          }
           await pb
             .collection("live")
-            .getFirstListItem(`url = "${newsItem.url}"`);
+            .getFirstListItem(
+              `url = "${newsItem.url}" || title = "${newsItem.title}"`
+            );
         } catch (e) {
           try {
             await pb.collection("live").create({
@@ -46,9 +54,23 @@ export async function setNews(data: Props) {
           data.categoryNews![category as keyof CategoryType].map(
             async (newsItem) => {
               try {
+                if (
+                  newsItem.url.startsWith(`"`) &&
+                  newsItem.url.endsWith(`"`)
+                ) {
+                  newsItem.url = newsItem.url.slice(1, -1);
+                }
+                if (
+                  newsItem.title.startsWith(`"`) &&
+                  newsItem.title.endsWith(`"`)
+                ) {
+                  newsItem.title = newsItem.title.slice(1, -1);
+                }
                 await pb
                   .collection("category")
-                  .getFirstListItem(`url = "${newsItem.url}"`);
+                  .getFirstListItem(
+                    `url = "${newsItem.url}" || title = "${newsItem.title}"`
+                  );
               } catch (e) {
                 await pb.collection("category").create({
                   title: newsItem.title,
@@ -74,9 +96,23 @@ export async function setNews(data: Props) {
           data.countryNews![country as keyof CountryType].map(
             async (newsItem) => {
               try {
+                if (
+                  newsItem.url.startsWith(`"`) &&
+                  newsItem.url.endsWith(`"`)
+                ) {
+                  newsItem.url = newsItem.url.slice(1, -1);
+                }
+                if (
+                  newsItem.title.startsWith(`"`) &&
+                  newsItem.title.endsWith(`"`)
+                ) {
+                  newsItem.title = newsItem.title.slice(1, -1);
+                }
                 await pb
                   .collection("country")
-                  .getFirstListItem(`url = "${newsItem.url}"`);
+                  .getFirstListItem(
+                    `url = "${newsItem.url}" || title = "${newsItem.title}"`
+                  );
               } catch (e) {
                 await pb.collection("country").create({
                   title: newsItem.title,
